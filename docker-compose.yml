@@ -11,6 +11,12 @@ services:
             - ./:/var/www/html
         networks:
             - laravel
+        depends_on:
+            - redis
+        environment:
+            REDIS_HOST: redis
+            REDIS_PASSWORD: null
+            REDIS_PORT: 6379
 
     webserver:
         image: nginx:alpine
@@ -53,6 +59,30 @@ services:
             PMA_PASSWORD: secret
         ports:
             - "8080:80"
+        networks:
+            - laravel
+    redis:
+        image: redis:alpine
+        container_name: redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./docker/redis:/data
+        networks:
+            - laravel
+    horizon:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: horizon
+        command: php artisan horizon
+        restart: unless-stopped
+        volumes:
+            - ./:/var/www/html
+        depends_on:
+            - app
+            - redis
         networks:
             - laravel
 

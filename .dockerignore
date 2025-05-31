@@ -1,0 +1,10 @@
+**/.git
+**/node_modules
+**/vendor
+**/.idea
+**/.vscode
+*.log
+.env
+docker-compose.yml
+docker/mysql/*
+!docker/mysql/.gitkeep
